@@ -1,0 +1,6 @@
+$latex = 'platex -interaction=nonstopmode -halt-on-error %O %S';
+$bibtex = 'pbibtex %O %S';
+$dvipdf = 'dvipdfmx %O -o %D %S';
+$pdf_mode = 3;
+$bibtex_use = 2;  # latexmk -c で .bbl も消す
+$clean_ext = "dvi";  # latexmk -c で .dvi も消す

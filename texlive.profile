@@ -1,0 +1,12 @@
+# install-tl に渡すプロファイル
+selected_scheme scheme-infraonly
+instopt_adjustpath 1
+instopt_adjustrepo 1
+instopt_letter 0
+instopt_write18_restricted 1
+tlpdbopt_autobackup 0
+tlpdbopt_desktop_integration 0
+tlpdbopt_file_assocs 0
+tlpdbopt_install_docfiles 0
+tlpdbopt_install_srcfiles 0
+tlpdbopt_w32_multi_user 0

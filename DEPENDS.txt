@@ -1,0 +1,16 @@
+# どの文書でも使うような基本パッケージ
+
+## LaTeX
+hard latex-bin
+hard latexmk
+
+## pLaTeX
+hard platex
+hard ptex-fonts
+hard pbibtex-base
+hard dvipdfmx
+
+## フォント
+hard haranoaji
+hard ptex-fontmaps
+hard amsfonts

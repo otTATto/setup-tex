@@ -1,0 +1,6 @@
+# check スクリプト実行中や失敗時に残ってしまう不要なファイルを除く
+check/*
+!check/sample.tex
+!check/sample.bib
+!check/latexmkrc
+!check/expected.pdf

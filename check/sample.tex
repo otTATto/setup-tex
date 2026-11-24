@@ -1,0 +1,26 @@
+% setup.tex の動作確認用文書
+\documentclass[a4paper]{jarticle}
+
+\title{動作確認}
+\author{setup.tex}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{和文と欧文}
+吾輩は猫である。名前は\textbf{まだ無い}。
+The quick brown fox jumps over \textbf{the lazy dog}.
+
+\section{数式}
+\begin{equation}
+  e^{i\pi} + 1 = 0, \qquad
+  \int_{-\infty}^{\infty} e^{-x^2}\,dx = \sqrt{\pi}
+\end{equation}
+
+\section{参考文献}
+\LaTeX{} の解説書 \cite{lamport} を参照。
+
+\bibliographystyle{junsrt}
+\bibliography{sample}
+\end{document}

@@ -1,10 +1,11 @@
-# setup.tex
+# $\TeX$ Setup
 
-TeX 環境を Windows/macOS にセットアップするための **個人的な** 設定ファイルとスクリプトです。
+$\TeX$ 環境を Windows/macOS にセットアップするための **個人的な** 設定ファイルとスクリプトです。
 
 ## 🚀 セットアップ手順
 
 1. 以下のスクリプトを実行することで、端末に最小構成の TeX Live を導入し、どの文書でも使うような基本的なパッケージ（以降、「基本パッケージ」と呼ぶ。）をインストールします
+
    ```powershell
    # Windows
    scripts\setup.ps1
@@ -14,6 +15,7 @@ TeX 環境を Windows/macOS にセットアップするための **個人的な*
    sudo scripts/setup.sh
    ```
 2. 試しに以下を実行し、`check/sample.tex` ファイルが期待どおりにコンパイルされることを確認します
+
    ```powershell
    # Windows
    # PATH を反映させるために、ターミナルを開き直してから実行します

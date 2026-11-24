@@ -1,4 +1,4 @@
-# $\TeX$ Setup
+# TeX Setup
 
 $\TeX$ 環境を Windows/macOS にセットアップするための **個人的な** 設定ファイルとスクリプトです。
 

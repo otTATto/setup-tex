@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # action で TeX Live を入れ、check/expected.pdf を再現できるか確かめる
+  install:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: tex
+        uses: ./
+        with:
+          depends: .github/DEPENDS.txt
+      - name: Show Result
+        run: |
+          echo "texdir=${{ steps.tex.outputs.texdir }} cache-hit=${{ steps.tex.outputs.cache-hit }}"
+          which latexmk
+      - name: Check Depends Input
+        run: kpsewhich booktabs.sty
+      - name: Check Build
+        if: runner.os != 'Windows'
+        run: sh scripts/check.sh
+      - name: Check Build (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: scripts/check.ps1
+
+  # 同じ入力で 2 回目を実行し、キャッシュが当たることを確かめる
+  cached:
+    needs: install
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: tex
+        uses: ./
+        with:
+          depends: .github/DEPENDS.txt
+      - name: Check cache hit
+        if: steps.tex.outputs.cache-hit != 'true'
+        run: |
+          echo "::error::cache was not restored"
+          exit 1
+      - name: Check Depends Input
+        run: kpsewhich booktabs.sty
+      - name: Check Build
+        if: runner.os != 'Windows'
+        run: sh scripts/check.sh
+      - name: Check Build (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: scripts/check.ps1

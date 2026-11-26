@@ -20,7 +20,7 @@ trap 'rm -rf "$work"' EXIT
 # 1. install-tl を取得
 curl -fsSL --retry 3 -o "$work/install-tl-unx.tar.gz" https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
 tar -xzf "$work/install-tl-unx.tar.gz" -C "$work"
-installer=$(echo "$work"/install-tl-*)
+installer=$(echo "$work"/install-tl-[0-9]*)
 
 if [ -z "$texdir" ]; then
     year=$(sed -n 's/.*version \([0-9]\{4\}\).*/\1/p' "$installer/release-texlive.txt" | head -n 1)

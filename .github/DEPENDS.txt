@@ -1,0 +1,2 @@
+# CI で action の depends 入力を試すための追加パッケージ
+hard booktabs

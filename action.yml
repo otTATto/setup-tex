@@ -1,0 +1,149 @@
+name: Setup TeX Live
+description: Install a minimal TeX Live with basic (p)LaTeX packages, add it to PATH, and cache it.
+author: otTATto
+branding:
+  icon: book-open
+  color: green
+
+inputs:
+  depends:
+    description: >-
+      Path to an additional DEPENDS.txt (relative to the workspace) whose `hard <pkg>` lines
+      are installed with tlmgr in addition to the basic packages.
+    required: false
+    default: ''
+  cache:
+    description: Whether to cache the TeX Live installation with actions/cache.
+    required: false
+    default: 'true'
+
+outputs:
+  texdir:
+    description: Directory where TeX Live is installed.
+    value: ${{ steps.prepare.outputs.texdir }}
+  cache-hit:
+    description: Whether the installation was restored from the cache.
+    value: ${{ steps.restore.outputs.cache-hit == 'true' }}
+
+runs:
+  using: composite
+  steps:
+    # インストール先・追加の DEPENDS.txt の絶対パス・キャッシュのキーを決める
+    - id: prepare
+      shell: bash
+      env:
+        DEPENDS: ${{ inputs.depends }}
+        # ランナーのユーザーが書き込める場所に入れ、キャッシュの保存・復元の権限を揃える
+        TEXDIR: ${{ runner.tool_cache }}/texlive
+        KEY_PREFIX: texlive-${{ runner.os }}-${{ runner.arch }}
+      run: |
+        set -eu
+        # Windows の Git Bash でも扱えるよう、パスを POSIX 形式にそろえる
+        to_posix() { if command -v cygpath > /dev/null; then cygpath -u "$1"; else printf '%s\n' "$1"; fi; }
+        action_path=$(to_posix "$GITHUB_ACTION_PATH")
+        workspace=$(to_posix "$GITHUB_WORKSPACE")
+
+        depends_file=
+        if [ -n "$DEPENDS" ]; then
+          case $DEPENDS in
+            /* | [A-Za-z]:*) depends_file=$DEPENDS ;;
+            *) depends_file=$GITHUB_WORKSPACE/$DEPENDS ;;
+          esac
+          if [ ! -f "$(to_posix "$depends_file")" ]; then
+            echo "::error::depends file not found: $DEPENDS"
+            exit 1
+          fi
+        fi
+
+        # キャッシュのキーに使う TeX Live の年を、ミラーの TLConfig.pm から読む
+        year=$(curl -fsSL --retry 3 https://mirror.ctan.org/systems/texlive/tlnet/tlpkg/TeXLive/TLConfig.pm |
+          sed -n 's/^our \$ReleaseYear = \([0-9]\{4\}\);.*/\1/p')
+        if [ -z "$year" ]; then
+          echo "::error::failed to detect the TeX Live release year"
+          exit 1
+        fi
+
+        # インストール内容を決めるファイルの中身をまとめてハッシュする
+        if command -v sha256sum > /dev/null; then sha() { sha256sum; }; else sha() { shasum -a 256; }; fi
+        hash=$({
+          cat "$action_path/texlive.profile"
+          echo '--- DEPENDS.txt'
+          cat "$action_path/DEPENDS.txt"
+          echo '--- depends'
+          if [ -n "$depends_file" ]; then cat "$(to_posix "$depends_file")"; fi
+        } | tr -d '\r' | sha | cut -c 1-16)
+
+        {
+          echo "texdir=$TEXDIR"
+          echo "depends=$depends_file"
+          echo "key=$KEY_PREFIX-$year-$hash"
+        } >> "$GITHUB_OUTPUT"
+
+    - id: restore
+      if: inputs.cache == 'true'
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ steps.prepare.outputs.texdir }}
+        key: ${{ steps.prepare.outputs.key }}
+
+    - name: Install TeX Live (Linux, macOS)
+      if: steps.restore.outputs.cache-hit != 'true' && runner.os != 'Windows'
+      shell: bash
+      env:
+        TEXDIR: ${{ steps.prepare.outputs.texdir }}
+        DEPENDS_FILE: ${{ steps.prepare.outputs.depends }}
+      run: |
+        set -eu
+        # instopt_adjustpath で /usr/local/bin にリンクを作るため root で入れ、
+        # キャッシュと tlmgr を sudo なしで扱えるよう所有者をランナーに戻す
+        sudo sh "$GITHUB_ACTION_PATH/scripts/setup.sh" --texdir "$TEXDIR"
+        sudo chown -R "$(id -u):$(id -g)" "$TEXDIR"
+
+        if [ -n "$DEPENDS_FILE" ]; then
+          packages=$(sed -n 's/^[[:space:]]*hard[[:space:]]\{1,\}\([^[:space:]#]\{1,\}\).*/\1/p' "$DEPENDS_FILE")
+          if [ -n "$packages" ]; then
+            # shellcheck disable=SC2086
+            "$(echo "$TEXDIR"/bin/*)/tlmgr" install $packages
+          fi
+        fi
+
+    - name: Install TeX Live (Windows)
+      if: steps.restore.outputs.cache-hit != 'true' && runner.os == 'Windows'
+      shell: pwsh
+      env:
+        TEXDIR: ${{ steps.prepare.outputs.texdir }}
+        DEPENDS_FILE: ${{ steps.prepare.outputs.depends }}
+      run: |
+        & "$env:GITHUB_ACTION_PATH\scripts\setup.ps1" -TexDir $env:TEXDIR
+
+        if ($env:DEPENDS_FILE) {
+          $packages = @([IO.File]::ReadAllLines($env:DEPENDS_FILE) | ForEach-Object {
+            if ($_ -match '^\s*hard\s+(\S+)') { $Matches[1] }
+          })
+          if ($packages) {
+            & "$env:TEXDIR\bin\windows\tlmgr.bat" install @packages
+            if ($LASTEXITCODE) { throw "tlmgr install failed (exit $LASTEXITCODE)" }
+          }
+        }
+
+    # インストールが成功したときだけ、その場で保存する
+    - if: inputs.cache == 'true' && steps.restore.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v6
+      with:
+        path: ${{ steps.prepare.outputs.texdir }}
+        key: ${{ steps.prepare.outputs.key }}
+
+    # setup.ps1 が設定するユーザー PATH は後続のステップに反映されないため、GITHUB_PATH に追記する
+    - name: Add TeX Live to PATH (Linux, macOS)
+      if: runner.os != 'Windows'
+      shell: bash
+      env:
+        TEXDIR: ${{ steps.prepare.outputs.texdir }}
+      run: echo "$TEXDIR"/bin/* >> "$GITHUB_PATH"
+
+    - name: Add TeX Live to PATH (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      env:
+        TEXDIR: ${{ steps.prepare.outputs.texdir }}
+      run: Add-Content -Path $env:GITHUB_PATH -Value "$env:TEXDIR\bin\windows"

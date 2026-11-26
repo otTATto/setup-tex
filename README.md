@@ -1,8 +1,10 @@
 # TeX Setup
 
-$\TeX$ 環境を Windows/macOS にセットアップするための **個人的な** 設定ファイルとスクリプトです。
+$\TeX$ 環境を Windows/macOS や GitHub Actions にセットアップするための **個人的な** 設定ファイルとスクリプトです。
 
 ## 🚀 セットアップ手順
+
+### Windows/macOS にセットアップする
 
 1. 以下のスクリプトを実行することで、端末に最小構成の TeX Live を導入し、どの文書でも使うような基本的なパッケージ（以降、「基本パッケージ」と呼ぶ。）をインストールします
 
@@ -26,6 +28,21 @@ $\TeX$ 環境を Windows/macOS にセットアップするための **個人的�
    scripts/check.sh
    ```
 3. `✅ check/expected.pdf と一致しました。` と返れば OK です
+
+### GitHub Actions にセットアップする
+
+1. Workflow の yml に以下のように書きます
+
+   ```yml
+   - uses: actions/checkout@v7
+   - uses: otTATto/tex-setup@v1
+     with: 
+       depends: path/to/DEPENDS.txt   # 任意: 基本パッケージの他に追加で入れたいパッケージを指定
+   ```
+
+- `depends`: ワークスペースからの相対パスで、形式はこのリポジトリの `DEPENDS.txt` と同じ `hard <pkg>` 行です
+- `cache`: インストール先をキャッシュし、2 回目以降はインストールを飛ばします（既定は `true` です）
+- ubuntu / windows / macos のランナーに対応しています
 
 ## 📝 設定ファイルとスクリプト
 

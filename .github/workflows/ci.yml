@@ -4,10 +4,18 @@ on:
   push:
   workflow_dispatch:
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   # action で TeX Live を入れ、check/expected.pdf を再現できるか確かめる
   install:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
       - id: tex
@@ -21,12 +29,21 @@ jobs:
       - name: Check Depends Input
         run: kpsewhich booktabs.sty
       - name: Check Build
+        if: runner.os != 'Windows'
         run: sh scripts/check.sh
+      - name: Check Build (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: scripts/check.ps1
 
   # 同じ入力で 2 回目を実行し、キャッシュが当たることを確かめる
   cached:
     needs: install
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
       - id: tex
@@ -41,4 +58,9 @@ jobs:
       - name: Check Depends Input
         run: kpsewhich booktabs.sty
       - name: Check Build
+        if: runner.os != 'Windows'
         run: sh scripts/check.sh
+      - name: Check Build (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: scripts/check.ps1

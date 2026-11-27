@@ -4,8 +4,8 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@ottatto/stex"><img src="https://img.shields.io/npm/v/@ottatto/stex?logo=npm&style=for-the-badge" alt="npm"></a>
-  <img src="https://img.shields.io/node/v/@ottatto/stex?logo=nodedotjs&style=for-the-badge" alt="Node.js">
   <a href="https://github.com/otTATto/setup-tex/releases"><img src="https://img.shields.io/github/v/release/otTATto/setup-tex?logo=github&style=for-the-badge" alt="GitHub Release"></a>
+  <img src="https://img.shields.io/node/v/@ottatto/stex?logo=nodedotjs&style=for-the-badge" alt="Node.js">
   <a href="https://github.com/otTATto/setup-tex/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@ottatto/stex?style=for-the-badge" alt="License"></a>
 </p>
 
@@ -67,7 +67,23 @@ My **PERSONAL** config files and scripts for setting up a $\TeX$ environment on 
 </details>
 
 <details>
-<summary><strong>TIP 3: Run the scripts directly from a clone</strong></summary>
+<summary><strong>TIP 3: Options of the stex command</strong></summary>
+
+- The `stex` command has the following options
+
+  | Command        | Option            | Description                                                            | Default                                                        |
+  | -------------- | ----------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------- |
+  | `stex setup`   | `--texdir <path>` | Where to install TeX Live                                              | Windows: `C:\texlive\YYYY`<br>macOS: `/usr/local/texlive/YYYY` |
+  | `stex depends` | `<DEPENDS.txt>`   | Path of the `DEPENDS.txt` to read                                      | `./DEPENDS.txt`                                                |
+  |                | `--texdir <path>` | Where the TeX Live to install into is                                  | The TeX Live on the PATH                                       |
+  | `stex check`   | `--update`        | Replace `check/expected.pdf` with the generated PDF, without comparing | Disabled                                                       |
+  | `stex`         | `-h`, `--help`    | Show the usage                                                         |                                                                |
+  |                | `-v`, `--version` | Show the version                                                       |                                                                |
+
+</details>
+
+<details>
+<summary><strong>TIP 4: Run the scripts directly from a clone</strong></summary>
 
 - Each `stex` command just calls a script in `scripts/`, so you can also run them directly in a clone of this repository
 

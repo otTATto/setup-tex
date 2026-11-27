@@ -4,12 +4,9 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@ottatto/stex"><img src="https://img.shields.io/npm/v/@ottatto/stex?logo=npm&style=for-the-badge" alt="npm"></a>
-  <img src="https://img.shields.io/node/v/@ottatto/stex?logo=nodedotjs&style=for-the-badge" alt="Node.js">
   <a href="https://github.com/otTATto/setup-tex/releases"><img src="https://img.shields.io/github/v/release/otTATto/setup-tex?logo=github&style=for-the-badge" alt="GitHub Release"></a>
+  <img src="https://img.shields.io/node/v/@ottatto/stex?logo=nodedotjs&style=for-the-badge" alt="Node.js">
   <a href="https://github.com/otTATto/setup-tex/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@ottatto/stex?style=for-the-badge" alt="License"></a>
-</p>
-<p align="center">
-  <a href="https://tug.org/texlive/"><img src="https://img.shields.io/badge/TeX_Live-scheme--infraonly-008080?logo=latex&style=for-the-badge" alt="TeX Live"></a>
 </p>
 
 [English](README.md) | 日本語
@@ -70,7 +67,23 @@ $\TeX$ 環境を PC や GitHub Actions にセットアップするための「**
 </details>
 
 <details>
-<summary><strong>補足③ Clone してスクリプトを直接実行したい</strong></summary>
+<summary><strong>補足③ stex コマンドで使用可能なオプションを確認したい</strong></summary>
+
+- `stex` コマンドには、以下のオプションが用意されています
+
+  | コマンド       | オプション        | 説明                                                        | 既定値                                                         |
+  | -------------- | ----------------- | ----------------------------------------------------------- | -------------------------------------------------------------- |
+  | `stex setup`   | `--texdir <path>` | TeX Live のインストール先                                   | Windows: `C:\texlive\YYYY`<br>macOS: `/usr/local/texlive/YYYY` |
+  | `stex depends` | `<DEPENDS.txt>`   | 読み込む `DEPENDS.txt` のパス                               | `./DEPENDS.txt`                                                |
+  |                | `--texdir <path>` | パッケージを入れる TeX Live の場所                          | PATH 上の TeX Live                                             |
+  | `stex check`   | `--update`        | 比較せず、生成した PDF で `check/expected.pdf` を置き換える | 無効                                                           |
+  | `stex`         | `-h`, `--help`    | 使い方を表示する                                            |                                                                |
+  |                | `-v`, `--version` | バージョンを表示する                                        |                                                                |
+
+</details>
+
+<details>
+<summary><strong>補足④ Clone してスクリプトを直接実行したい</strong></summary>
 
 - `stex` の各コマンドは、`scripts/` のスクリプトを呼んでいるだけなので、Clone したリポジトリで直接実行することもできます
 

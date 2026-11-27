@@ -6,28 +6,74 @@ $\TeX$ 環境を PC や GitHub Actions にセットアップするための「**
 
 ### 💻 PC にセットアップする
 
-1. 以下のスクリプトを実行することで、端末に最小構成の TeX Live を導入し、どの文書でも使うような基本的なパッケージ（以降、「基本パッケージ」と呼ぶ。）をインストールします
+> [!IMPORTANT]
+> Node.js（22 以降）が必要です。
 
-   ```powershell
-   # Windows
-   scripts\setup.ps1
-   ```
-   ```sh
-   # macOS
-   sudo scripts/setup.sh
-   ```
-2. 試しに以下を実行し、`check/sample.tex` ファイルが期待どおりにコンパイルされることを確認します
+1. 以下を実行して、端末の任意の場所から `stex` コマンドを使えるようにします
 
-   ```powershell
-   # Windows
-   # PATH を反映させるために、ターミナルを開き直してから実行します
-   scripts\check.ps1
-   ```
    ```sh
-   # macOS
-   scripts/check.sh
+   npm install -g @ottatto/setup-tex
    ```
-3. `✅ check/expected.pdf と一致しました。` と返れば OK です
+2. 以下を実行することで、端末に最小構成の TeX Live を導入し、どの文書でも使うような基本的なパッケージ（以降、「基本パッケージ」と呼ぶ。）をインストールします
+
+   ```sh
+   stex setup
+   ```
+
+   - macOS では、途中で `sudo` のパスワードが必要になります
+   - Windows では、PATH を反映させるために、終了後にターミナルを開き直します
+3. 試しに以下を実行し、同梱のサンプルが期待どおりにコンパイルされることを確認します
+
+   ```sh
+   stex check
+   ```
+4. `✅ check/expected.pdf と一致しました。` と返れば OK です
+
+<details>
+<summary><strong>補足① インストールせずに試してみたい</strong></summary>
+
+- 以下のように `npx` を使えば、インストールせずに `stex` コマンドを試せます
+
+  ```sh
+  npx @ottatto/setup-tex@latest setup
+  ```
+
+- ただし、以降の説明における `stex` を `npx @ottatto/setup-tex@latest` に読み替えて実行する必要があります
+
+</details>
+
+<details>
+<summary><strong>補足② 文書ごとに追加でパッケージを入れたい</strong></summary>
+
+- 文書のディレクトリに、基本パッケージと同じ形式（`hard <pkg>` 行）の `DEPENDS.txt` を置いておき、そこで以下を実行すると、足りないパッケージを追加でインストールできます
+
+  ```sh
+  cd path/to/document
+  stex depends                       # ./DEPENDS.txt を読む
+  stex depends path/to/DEPENDS.txt
+  ```
+
+</details>
+
+<details>
+<summary><strong>補足③ Clone してスクリプトを直接実行したい</strong></summary>
+
+- `stex` の各コマンドは、`scripts/` のスクリプトを呼んでいるだけなので、Clone したリポジトリで直接実行することもできます
+
+  ```powershell
+  # Windows
+  scripts\setup.ps1
+  scripts\depends.ps1 path\to\DEPENDS.txt
+  scripts\check.ps1
+  ```
+  ```sh
+  # macOS
+  scripts/setup.sh
+  scripts/depends.sh path/to/DEPENDS.txt
+  scripts/check.sh
+  ```
+
+</details>
 
 ### 🤖 GitHub Actions にセットアップする
 
@@ -69,16 +115,21 @@ setup スクリプトは、以下の 3 つのことを行います。
 - 無指定の場合、TeX Live は `install-tl` の既定の場所（Windows: `C:\texlive\YYYY`, macOS: `/usr/local/texlive/YYYY`）にインストールされます
 - 任意の場所にインストールしたい場合は、以下のように指定してインストールします
 
-   ```powershell
-   # Windows
-   scripts\setup.ps1 -TexDir <path>
-   ```
    ```sh
-   # macOS
-   sudo scripts/setup.sh --texdir <path>
+   stex setup --texdir <path>
    ```
 
 </details>
+
+### 🧩 depends スクリプト
+
+depends スクリプトは、以下の 2 つのことを行います。
+
+1. 指定の `DEPENDS.txt`（省略時はカレントディレクトリの `DEPENDS.txt`）から `hard <pkg>` 行のパッケージを読み取る
+2. 既に入っている TeX Live に、`tlmgr` でそのパッケージを追加でインストールし、増えたコマンドにも PATH を通す
+
+- インストール先は PATH 上の TeX Live から決められます
+- 別の場所の TeX Live に入れる場合は `--texdir <path>` を指定してください
 
 ### ⚖️ check スクリプト
 
@@ -109,11 +160,13 @@ check スクリプトは、以下の 2 つのことを行います。
 
 ```
 .
+├── bin/              # stex コマンドの入口
 ├── check/            # check スクリプトが検証する TeX ファイルなど
-├── scripts/          # setup・check スクリプト
+├── scripts/          # setup・depends・check スクリプト
 ├── texlive.profile   # TeX Live のインストール設定
 ├── DEPENDS.txt       # インストールする基本パッケージの定義
-├── action.yml        # GitHub Actions から setup スクリプトを呼び出す action
+├── action.yml        # GitHub Actions から setup・depends スクリプトを呼び出す action
+├── package.json 
 └── README.md
 ```
 

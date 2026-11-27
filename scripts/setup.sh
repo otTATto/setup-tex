@@ -1,9 +1,15 @@
 #!/bin/sh
 # 最小構成の TeX Live を導入し、DEPENDS.txt のパッケージをインストールする
 #
-# 使い方: sudo scripts/setup.sh [--texdir <dir>]
+# 使い方: scripts/setup.sh [--texdir <dir>]
 #   --texdir  インストール先（省略時は install-tl の既定 /usr/local/texlive/YYYY になる）
 set -eu
+
+# /usr/local 以下に書き込むので、root でなければ sudo で実行し直す
+# ただし sudo は PATH を置き換え、sudo npx では node が見つからないことがあるため、呼び出し側では sudo しない
+if [ "$(id -u)" -ne 0 ]; then
+    exec sudo sh "$0" "$@"
+fi
 
 root=$(cd "$(dirname "$0")/.." && pwd)
 texdir=
@@ -57,4 +63,4 @@ tlmgr=$(echo "$texdir"/bin/*)/tlmgr
 "$tlmgr" install $packages
 "$tlmgr" path add
 
-echo "✅ TeX Live を $texdir にインストールしました。"
+echo "✅ Installed TeX Live to $texdir"

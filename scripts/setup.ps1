@@ -20,7 +20,7 @@ function Get-CtanFile([string]$Path, [string]$OutFile) {
         curl.exe -fsSL --retry 3 -o $OutFile $url
         $status = $LASTEXITCODE
         if (-not $status) { return }
-        if ($i -ge $max) { throw "Failed to fetch $url after $max attempts (curl exit $status)" }
+        if ($i -ge $max) { throw "❌ Failed to fetch $url after $max attempts (curl exit $status)" }
         Write-Warning "Attempt $i/$max to fetch $url failed (curl exit $status); retrying with another mirror in $($i * 5)s"
         Start-Sleep -Seconds ($i * 5)
     }
@@ -43,7 +43,7 @@ try {
 
     # 2. texlive.profile を渡して TeX Live をインストール
     & "$installer\install-tl-windows.bat" -no-gui -profile "$root\texlive.profile" -texdir $TexDir
-    if ($LASTEXITCODE) { throw "❌ install-tl が失敗しました (exit $LASTEXITCODE)" }
+    if ($LASTEXITCODE) { throw "❌ install-tl failed (exit $LASTEXITCODE)" }
 
     # 3. DEPENDS.txt のパッケージをインストール
     # Get-Content は PowerShell 5.1 で UTF-8 を Shift_JIS として読み、日本語コメントの
@@ -52,9 +52,9 @@ try {
         if ($_ -match '^\s*hard\s+(\S+)') { $Matches[1] }
     }
     & "$TexDir\bin\windows\tlmgr.bat" install @packages
-    if ($LASTEXITCODE) { throw "❌ tlmgr install が失敗しました (exit $LASTEXITCODE)" }
+    if ($LASTEXITCODE) { throw "❌ tlmgr install failed (exit $LASTEXITCODE)" }
 
-    Write-Host "✅ TeX Live を $TexDir にインストールしました。PATH を反映させるには、ターミナルを開き直してください。"
+    Write-Host "✅ Installed TeX Live to $TexDir; reopen the terminal to pick up the new PATH"
 }
 finally {
     Remove-Item -Recurse -Force $work

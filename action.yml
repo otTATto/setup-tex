@@ -109,18 +109,13 @@ runs:
         DEPENDS_FILE: ${{ steps.prepare.outputs.depends }}
       run: |
         set -eu
-        # instopt_adjustpath で /usr/local/bin にリンクを作るため root で入れ、
-        # キャッシュと tlmgr を sudo なしで扱えるよう所有者をランナーに戻す
-        sudo sh "$GITHUB_ACTION_PATH/scripts/setup.sh" --texdir "$TEXDIR"
-        sudo chown -R "$(id -u):$(id -g)" "$TEXDIR"
-
+        # setup.sh と depends.sh は、/usr/local/bin にリンクを作るため自分で sudo し直す
+        sh "$GITHUB_ACTION_PATH/scripts/setup.sh" --texdir "$TEXDIR"
         if [ -n "$DEPENDS_FILE" ]; then
-          packages=$(sed -n 's/^[[:space:]]*hard[[:space:]]\{1,\}\([^[:space:]#]\{1,\}\).*/\1/p' "$DEPENDS_FILE")
-          if [ -n "$packages" ]; then
-            # shellcheck disable=SC2086
-            "$(echo "$TEXDIR"/bin/*)/tlmgr" install $packages
-          fi
+          sh "$GITHUB_ACTION_PATH/scripts/depends.sh" --texdir "$TEXDIR" "$DEPENDS_FILE"
         fi
+        # キャッシュと tlmgr を sudo なしで扱えるよう所有者をランナーに戻す
+        sudo chown -R "$(id -u):$(id -g)" "$TEXDIR"
 
     - name: Install TeX Live (Windows)
       if: steps.restore.outputs.cache-hit != 'true' && runner.os == 'Windows'
@@ -130,15 +125,8 @@ runs:
         DEPENDS_FILE: ${{ steps.prepare.outputs.depends }}
       run: |
         & "$env:GITHUB_ACTION_PATH\scripts\setup.ps1" -TexDir $env:TEXDIR
-
         if ($env:DEPENDS_FILE) {
-          $packages = @([IO.File]::ReadAllLines($env:DEPENDS_FILE) | ForEach-Object {
-            if ($_ -match '^\s*hard\s+(\S+)') { $Matches[1] }
-          })
-          if ($packages) {
-            & "$env:TEXDIR\bin\windows\tlmgr.bat" install @packages
-            if ($LASTEXITCODE) { throw "tlmgr install failed (exit $LASTEXITCODE)" }
-          }
+          & "$env:GITHUB_ACTION_PATH\scripts\depends.ps1" -TexDir $env:TEXDIR -Path $env:DEPENDS_FILE
         }
 
     # インストールが成功したときだけ、その場で保存する

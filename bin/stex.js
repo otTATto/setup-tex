@@ -97,7 +97,12 @@ const [file, args] = windows
     ]
   : ['sh', [join(root, 'scripts', `${name}.sh`), ...command.sh(values, positionals[0])]];
 
-const result = spawnSync(file, args, { stdio: 'inherit' });
+// pwsh (PowerShell 7) から起動すると、PSModulePath に PowerShell 7 のモジュールが入ったまま引き継がれ、
+// Windows PowerShell 5.1 が Get-FileHash などを読み込めなくなるので、外して既定に戻させる
+const env = windows
+  ? Object.fromEntries(Object.entries(process.env).filter(([key]) => key.toLowerCase() !== 'psmodulepath'))
+  : process.env;
+const result = spawnSync(file, args, { stdio: 'inherit', env });
 if (result.error) {
   console.error(`❌ failed to run ${file}: ${result.error.message}`);
   process.exit(1);

@@ -6,6 +6,7 @@
   <a href="https://www.npmjs.com/package/@ottatto/setup-tex"><img src="https://img.shields.io/npm/v/@ottatto/setup-tex?logo=npm&style=for-the-badge" alt="npm"></a>
   <img src="https://img.shields.io/node/v/@ottatto/setup-tex?logo=nodedotjs&style=for-the-badge" alt="Node.js">
   <a href="https://github.com/otTATto/setup-tex/releases"><img src="https://img.shields.io/github/v/release/otTATto/setup-tex?logo=github&style=for-the-badge" alt="GitHub Release"></a>
+  <a href="https://github.com/otTATto/setup-tex/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@ottatto/setup-tex?style=for-the-badge" alt="License"></a>
 </p>
 
 English | [日本語](README.ja.md)
@@ -186,3 +187,7 @@ Roughly, the repository is structured as follows.
 - [**TeX Live package dependencies**](https://tug.org/texlive/pkgdepend.html)
 - [**install-tl** - TeX Live cross-platform installer](https://www.tug.org/texlive/doc/install-tl.html)
 - [**latexmk**](https://ctan.org/pkg/latexmk)
+
+## 📜 License
+
+[MIT](LICENSE)

@@ -18,6 +18,7 @@
     "type": "git",
     "url": "git+https://github.com/otTATto/setup-tex.git"
   },
+  "license": "MIT",
   "author": "otTATto",
   "type": "module",
   "bin": {

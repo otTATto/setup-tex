@@ -1,0 +1,32 @@
+name: Release
+
+# v1.0.2 のような完全な版のタグを push すると、GitHub Release を作る
+# major の v1 は付け替えるタグなので、トリガーに含めない
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      # リリースノートは PR から自動生成する (分類は .github/release.yml)
+      - name: Create GitHub Release
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "::notice::release $GITHUB_REF_NAME already exists"
+            exit 0
+          fi
+          flags=(--generate-notes --verify-tag)
+          # v1.1.0-beta.1 のような版はプレリリースにする
+          if [[ "$GITHUB_REF_NAME" == *-* ]]; then flags+=(--prerelease); fi
+          gh release create "$GITHUB_REF_NAME" "${flags[@]}"
+        env:
+          GH_TOKEN: ${{ github.token }}

@@ -55,9 +55,6 @@ packages=$(sed -n 's/^[[:space:]]*hard[[:space:]]\{1,\}\([^[:space:]#]\{1,\}\).*
 tlmgr=$(echo "$texdir"/bin/*)/tlmgr
 # shellcheck disable=SC2086
 "$tlmgr" install $packages
-
-# 4. 手順 3 で増えたコマンドにもシンボリックリンクを張る
-#    （install-tl はインストール時点にあったコマンドの分しか張らない）
 "$tlmgr" path add
 
 echo "✅ TeX Live を $texdir にインストールしました。"

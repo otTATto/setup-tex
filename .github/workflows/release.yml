@@ -39,8 +39,8 @@ jobs:
           fi
           # 手で公開済みの版 (初回など) のタグなら、公開は飛ばす
           # npm view がその版を表示できたら、公開済みとみなす
-          if [ -n "$(npm view "@ottatto/setup-tex@$version" version 2>/dev/null)" ]; then
-            echo "::notice::@ottatto/setup-tex@$version is already published"
+          if [ -n "$(npm view "@ottatto/stex@$version" version 2>/dev/null)" ]; then
+            echo "::notice::@ottatto/stex@$version is already published"
             echo "published=true" >> "$GITHUB_OUTPUT"
           fi
 

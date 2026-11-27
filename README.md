@@ -3,10 +3,10 @@
 <p align="center"><strong><em>Minimal <a>TeX Live</a>. One command. On your PC and in CI.</em></strong></p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@ottatto/setup-tex"><img src="https://img.shields.io/npm/v/@ottatto/setup-tex?logo=npm&style=for-the-badge" alt="npm"></a>
-  <img src="https://img.shields.io/node/v/@ottatto/setup-tex?logo=nodedotjs&style=for-the-badge" alt="Node.js">
+  <a href="https://www.npmjs.com/package/@ottatto/stex"><img src="https://img.shields.io/npm/v/@ottatto/stex?logo=npm&style=for-the-badge" alt="npm"></a>
+  <img src="https://img.shields.io/node/v/@ottatto/stex?logo=nodedotjs&style=for-the-badge" alt="Node.js">
   <a href="https://github.com/otTATto/setup-tex/releases"><img src="https://img.shields.io/github/v/release/otTATto/setup-tex?logo=github&style=for-the-badge" alt="GitHub Release"></a>
-  <a href="https://github.com/otTATto/setup-tex/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@ottatto/setup-tex?style=for-the-badge" alt="License"></a>
+  <a href="https://github.com/otTATto/setup-tex/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@ottatto/stex?style=for-the-badge" alt="License"></a>
 </p>
 
 English | [日本語](README.ja.md)
@@ -23,7 +23,7 @@ My **PERSONAL** config files and scripts for setting up a $\TeX$ environment on 
 1. Run the following to make the `stex` command available anywhere in your terminal
 
    ```sh
-   npm install -g @ottatto/setup-tex
+   npm install -g @ottatto/stex
    ```
 2. Run the following to install a minimal TeX Live along with the packages used in almost every document (the "basic packages")
 
@@ -46,10 +46,10 @@ My **PERSONAL** config files and scripts for setting up a $\TeX$ environment on 
 - With `npx`, you can try the `stex` command without installing it
 
   ```sh
-  npx @ottatto/setup-tex@latest setup
+  npx @ottatto/stex@latest setup
   ```
 
-- In that case, read `stex` in the rest of this README as `npx @ottatto/setup-tex@latest`
+- In that case, read `stex` in the rest of this README as `npx @ottatto/stex@latest`
 
 </details>
 

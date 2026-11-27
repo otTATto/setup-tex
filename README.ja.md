@@ -3,10 +3,10 @@
 <p align="center"><strong><em>Minimal TeX Live. One command. On your PC and in CI.</em></strong></p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@ottatto/setup-tex"><img src="https://img.shields.io/npm/v/@ottatto/setup-tex?logo=npm&style=for-the-badge" alt="npm"></a>
-  <img src="https://img.shields.io/node/v/@ottatto/setup-tex?logo=nodedotjs&style=for-the-badge" alt="Node.js">
+  <a href="https://www.npmjs.com/package/@ottatto/stex"><img src="https://img.shields.io/npm/v/@ottatto/stex?logo=npm&style=for-the-badge" alt="npm"></a>
+  <img src="https://img.shields.io/node/v/@ottatto/stex?logo=nodedotjs&style=for-the-badge" alt="Node.js">
   <a href="https://github.com/otTATto/setup-tex/releases"><img src="https://img.shields.io/github/v/release/otTATto/setup-tex?logo=github&style=for-the-badge" alt="GitHub Release"></a>
-  <a href="https://github.com/otTATto/setup-tex/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@ottatto/setup-tex?style=for-the-badge" alt="License"></a>
+  <a href="https://github.com/otTATto/setup-tex/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@ottatto/stex?style=for-the-badge" alt="License"></a>
 </p>
 <p align="center">
   <a href="https://tug.org/texlive/"><img src="https://img.shields.io/badge/TeX_Live-scheme--infraonly-008080?logo=latex&style=for-the-badge" alt="TeX Live"></a>
@@ -26,7 +26,7 @@ $\TeX$ 環境を PC や GitHub Actions にセットアップするための「**
 1. 以下を実行して、端末の任意の場所から `stex` コマンドを使えるようにします
 
    ```sh
-   npm install -g @ottatto/setup-tex
+   npm install -g @ottatto/stex
    ```
 2. 以下を実行することで、端末に最小構成の TeX Live を導入し、どの文書でも使うような基本的なパッケージ（以降、「基本パッケージ」と呼ぶ。）をインストールします
 
@@ -49,10 +49,10 @@ $\TeX$ 環境を PC や GitHub Actions にセットアップするための「**
 - 以下のように `npx` を使えば、インストールせずに `stex` コマンドを試せます
 
   ```sh
-  npx @ottatto/setup-tex@latest setup
+  npx @ottatto/stex@latest setup
   ```
 
-- ただし、以降の説明における `stex` を `npx @ottatto/setup-tex@latest` に読み替えて実行する必要があります
+- ただし、以降の説明における `stex` を `npx @ottatto/stex@latest` に読み替えて実行する必要があります
 
 </details>
 

@@ -1,5 +1,5 @@
 {
-  "name": "@ottatto/setup-tex",
+  "name": "@ottatto/stex",
   "version": "1.1.0",
   "description": "Install a minimal TeX Live with basic (p)LaTeX packages, and add packages listed in DEPENDS.txt.",
   "keywords": [
@@ -22,7 +22,6 @@
   "author": "otTATto",
   "type": "module",
   "bin": {
-    "setup-tex": "bin/stex.js",
     "stex": "bin/stex.js"
   },
   "files": [

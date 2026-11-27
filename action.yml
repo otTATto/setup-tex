@@ -56,8 +56,23 @@ runs:
         fi
 
         # キャッシュのキーに使う TeX Live の年を、ミラーの TLConfig.pm から読む
-        year=$(curl -fsSL --retry 3 https://mirror.ctan.org/systems/texlive/tlnet/tlpkg/TeXLive/TLConfig.pm |
-          sed -n 's/^our \$ReleaseYear = \([0-9]\{4\}\);.*/\1/p')
+        # mirror.ctan.org は毎回別のミラーへリダイレクトするが、
+        # curl の --retry は証明書エラーなどを再試行しないので、失敗したら取得し直す
+        url=https://mirror.ctan.org/systems/texlive/tlnet/tlpkg/TeXLive/TLConfig.pm
+        tlconfig=$RUNNER_TEMP/TLConfig.pm
+        max=5
+        i=1
+        until curl -fsSL --retry 3 -o "$tlconfig" "$url"; do
+          status=$?
+          if [ "$i" -ge "$max" ]; then
+            echo "::error::failed to fetch $url after $max attempts (curl exit $status)"
+            exit 1
+          fi
+          echo "::warning::attempt $i/$max to fetch $url failed (curl exit $status); retrying with another mirror in $((i * 5))s"
+          sleep $((i * 5))
+          i=$((i + 1))
+        done
+        year=$(sed -n 's/^our \$ReleaseYear = \([0-9]\{4\}\);.*/\1/p' "$tlconfig")
         if [ -z "$year" ]; then
           echo "::error::failed to detect the TeX Live release year"
           exit 1

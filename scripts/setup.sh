@@ -63,4 +63,4 @@ tlmgr=$(echo "$texdir"/bin/*)/tlmgr
 "$tlmgr" install $packages
 "$tlmgr" path add
 
-echo "✅ TeX Live を $texdir にインストールしました。"
+echo "✅ Installed TeX Live to $texdir"

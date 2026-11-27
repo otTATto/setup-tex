@@ -16,20 +16,20 @@ $env:SOURCE_DATE_EPOCH = '0'
 $env:FORCE_SOURCE_DATE = '1'
 
 latexmk -cd -r "$check\latexmkrc" "$check\sample.tex"
-if ($LASTEXITCODE) { throw "❌　コンパイルに失敗しました (exit $LASTEXITCODE)" }
+if ($LASTEXITCODE) { throw "❌ Compilation failed (exit $LASTEXITCODE)" }
 latexmk -cd -r "$check\latexmkrc" -c "$check\sample.tex" | Out-Null
 
 if ($Update) {
     Move-Item -Force $actual $expected
-    Write-Host "⚠️ check/expected.pdf を更新しました。"
+    Write-Host "⚠️ Updated check/expected.pdf"
     exit 0
 }
 
 if ((Get-FileHash $actual).Hash -eq (Get-FileHash $expected).Hash) {
     Remove-Item $actual
-    Write-Host '✅ check/expected.pdf と一致しました。'
+    Write-Host '✅ Matches check/expected.pdf'
     exit 0
 }
-Write-Host '🚨 check/expected.pdf と一致しません。check/sample.pdf と見比べてください。'
-Write-Host '🤔 TeX Live の更新で差が出ることもあります。問題がなければ -Update で正解を更新します。'
+Write-Host '🚨 Does not match check/expected.pdf; compare it with check/sample.pdf'
+Write-Host '🤔 TeX Live updates can change the output; if it looks fine, run with -Update to replace the expected PDF'
 exit 1

@@ -17,15 +17,15 @@ latexmk -cd -r "$check/latexmkrc" -c "$check/sample.tex" > /dev/null
 
 if [ "${1:-}" = --update ]; then
     mv -f "$actual" "$expected"
-    echo '⚠️ check/expected.pdf を更新しました。'
+    echo '⚠️ Updated check/expected.pdf'
     exit 0
 fi
 
 if cmp -s "$actual" "$expected"; then
     rm -f "$actual"
-    echo '✅ check/expected.pdf と一致しました。'
+    echo '✅ Matches check/expected.pdf'
     exit 0
 fi
-echo '🚨 check/expected.pdf と一致しません。check/sample.pdf と見比べてください。'
-echo '🤔 TeX Live の更新で差が出ることもあります。問題がなければ --update で正解を更新します。'
+echo '🚨 Does not match check/expected.pdf; compare it with check/sample.pdf'
+echo '🤔 TeX Live updates can change the output; if it looks fine, run with --update to replace the expected PDF'
 exit 1

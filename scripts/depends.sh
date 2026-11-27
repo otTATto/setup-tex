@@ -20,33 +20,33 @@ done
 file=${file:-DEPENDS.txt}
 
 if [ ! -f "$file" ]; then
-    echo "❌ $file が見つかりません。" >&2
+    echo "❌ $file not found" >&2
     exit 1
 fi
 
 if [ -z "$texdir" ]; then
     if ! command -v kpsewhich > /dev/null; then
-        echo '❌ TeX Live が見つかりません。先に setup でインストールしてください。' >&2
+        echo '❌ TeX Live not found; install it with setup first' >&2
         exit 1
     fi
     texdir=$(kpsewhich -var-value=SELFAUTOPARENT)
 fi
 tlmgr=$(echo "$texdir"/bin/*/tlmgr)
 if [ ! -x "$tlmgr" ]; then
-    echo "❌ $texdir に tlmgr が見つかりません。" >&2
+    echo "❌ tlmgr not found in $texdir" >&2
     exit 1
 fi
 
 # インストール先と、コマンドのリンクを張る先の両方に書き込めないときは root でやり直す
 sys_bin=$("$tlmgr" option sys_bin | sed 's/.*: //')
 if [ "$(id -u)" -ne 0 ] && { [ ! -w "$texdir" ] || [ ! -w "$sys_bin" ]; }; then
-    echo "🔑 $texdir と $sys_bin に書き込むため、sudo で実行します。"
+    echo "🔑 Running with sudo to write to $texdir and $sys_bin"
     exec sudo sh "$0" --texdir "$texdir" "$file"
 fi
 
 packages=$(sed -n 's/^[[:space:]]*hard[[:space:]]\{1,\}\([^[:space:]#]\{1,\}\).*/\1/p' "$file")
 if [ -z "$packages" ]; then
-    echo "⚠️ $file に hard 行がありません。"
+    echo "⚠️ No hard lines in $file"
     exit 0
 fi
 
@@ -55,4 +55,4 @@ fi
 # 増えたコマンドにもシンボリックリンクを張る
 "$tlmgr" path add
 
-echo "✅ $file のパッケージをインストールしました。"
+echo "✅ Installed the packages in $file"

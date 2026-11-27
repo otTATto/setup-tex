@@ -9,7 +9,6 @@
 </p>
 <p align="center">
   <a href="https://tug.org/texlive/"><img src="https://img.shields.io/badge/TeX_Live-scheme--infraonly-008080?logo=latex&style=for-the-badge" alt="TeX Live"></a>
-  <a href="https://github.com/otTATto/setup-tex/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/otTATto/setup-tex/ci.yml?branch=main&label=CI&logo=githubactions&style=for-the-badge" alt="CI"></a>
 </p>
 
 English | [日本語](README.ja.md)

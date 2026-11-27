@@ -32,6 +32,12 @@ jobs:
         run: kpsewhich booktabs.sty
       # stex コマンドから OS に合ったスクリプトを呼べることも確かめる
       - name: Check Build
+        if: runner.os != 'Windows'
+        run: node bin/stex.js check
+      # Git Bash から呼ぶと latexmk の挙動が変わり PDF が一致しないため、PowerShell から呼ぶ
+      - name: Check Build (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
         run: node bin/stex.js check
 
   # 同じ入力で 2 回目を実行し、キャッシュが当たることを確かめる
@@ -57,4 +63,10 @@ jobs:
         run: kpsewhich booktabs.sty
       # stex コマンドから OS に合ったスクリプトを呼べることも確かめる
       - name: Check Build
+        if: runner.os != 'Windows'
+        run: node bin/stex.js check
+      # Git Bash から呼ぶと latexmk の挙動が変わり PDF が一致しないため、PowerShell から呼ぶ
+      - name: Check Build (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
         run: node bin/stex.js check

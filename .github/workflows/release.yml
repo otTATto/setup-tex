@@ -1,21 +1,55 @@
 name: Release
 
-# v1.0.2 のような完全な版のタグを push すると、GitHub Release を作る
+# v1.0.2 のような完全な版のタグを push すると、npm に公開して GitHub Release を作る
 # major の v1 は付け替えるタグなので、トリガーに含めない
+# npm のトークンは使わず、Trusted Publishing (GitHub Actions の OIDC) で認証する
 on:
   push:
     tags: ['v*.*.*']
 
 permissions:
+  # GitHub Release を作るのに必要
   contents: write
+  # Trusted Publishing と provenance に必要
+  id-token: write
 
 jobs:
   release:
-    name: Create GitHub Release
+    name: Publish to npm and Create GitHub Release
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
+
+      # Trusted Publishing には npm 11.5.1 以降が必要なので、それを同梱する Node を使う
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Check Version
+        id: version
+        run: |
+          # タグと package.json の version が食い違ったまま公開しないようにする
+          version="$(node -p "require('./package.json').version")"
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match package.json version $version"
+            exit 1
+          fi
+          # 手で公開済みの版 (初回など) のタグなら、公開は飛ばす
+          # npm view がその版を表示できたら、公開済みとみなす
+          if [ -n "$(npm view "@ottatto/setup-tex@$version" version 2>/dev/null)" ]; then
+            echo "::notice::@ottatto/setup-tex@$version is already published"
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # provenance は Trusted Publishing で自動で付く
+      # v1.1.0-beta.1 のような版は latest にせず、next として公開する
+      - name: Publish
+        if: steps.version.outputs.published != 'true'
+        run: |
+          if [[ "$GITHUB_REF_NAME" == *-* ]]; then npm publish --tag next; else npm publish; fi
 
       # リリースノートは PR から自動生成する (分類は .github/release.yml)
       - name: Create GitHub Release

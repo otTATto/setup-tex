@@ -1,4 +1,4 @@
-# TeX Setup
+# Setup TeX
 
 $\TeX$ 環境を PC や GitHub Actions にセットアップするための「**個人的な**」設定ファイルとスクリプトです。
 
@@ -35,7 +35,7 @@ $\TeX$ 環境を PC や GitHub Actions にセットアップするための「**
 
    ```yml
    - uses: actions/checkout@v7
-   - uses: otTATto/tex-setup@v1
+   - uses: otTATto/setup-tex@v1
      with:
        depends: path/to/DEPENDS.txt   # 任意: 基本パッケージの他に追加で入れたいパッケージを指定
    ```

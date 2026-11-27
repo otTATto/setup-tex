@@ -52,7 +52,12 @@ fi
 
 # 3. DEPENDS.txt のパッケージをインストール
 packages=$(sed -n 's/^[[:space:]]*hard[[:space:]]\{1,\}\([^[:space:]#]\{1,\}\).*/\1/p' "$root/DEPENDS.txt")
+tlmgr=$(echo "$texdir"/bin/*)/tlmgr
 # shellcheck disable=SC2086
-"$(echo "$texdir"/bin/*)/tlmgr" install $packages
+"$tlmgr" install $packages
+
+# 4. 手順 3 で増えたコマンドにもシンボリックリンクを張る
+#    （install-tl はインストール時点にあったコマンドの分しか張らない）
+"$tlmgr" path add
 
 echo "✅ TeX Live を $texdir にインストールしました。"

@@ -1,14 +1,11 @@
 <h1 align="center">Setup TeX</h1>
 
-<p align="center"><strong><em>Minimal TeX Live. One command. On your PC and in CI.</em></strong></p>
+<p align="center"><strong><em>Minimal <a>TeX Live</a>. One command. On your PC and in CI.</em></strong></p>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@ottatto/setup-tex"><img src="https://img.shields.io/npm/v/@ottatto/setup-tex?logo=npm&style=for-the-badge" alt="npm"></a>
   <img src="https://img.shields.io/node/v/@ottatto/setup-tex?logo=nodedotjs&style=for-the-badge" alt="Node.js">
   <a href="https://github.com/otTATto/setup-tex/releases"><img src="https://img.shields.io/github/v/release/otTATto/setup-tex?logo=github&style=for-the-badge" alt="GitHub Release"></a>
-</p>
-<p align="center">
-  <a href="https://tug.org/texlive/"><img src="https://img.shields.io/badge/TeX_Live-scheme--infraonly-008080?logo=latex&style=for-the-badge" alt="TeX Live"></a>
 </p>
 
 English | [日本語](README.ja.md)

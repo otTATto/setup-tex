@@ -1,0 +1,43 @@
+{
+  "name": "@ottatto/setup-tex",
+  "version": "1.1.0",
+  "description": "Install a minimal TeX Live with basic (p)LaTeX packages, and add packages listed in DEPENDS.txt.",
+  "keywords": [
+    "tex",
+    "latex",
+    "platex",
+    "texlive",
+    "tlmgr",
+    "setup"
+  ],
+  "homepage": "https://github.com/otTATto/setup-tex#readme",
+  "bugs": {
+    "url": "https://github.com/otTATto/setup-tex/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/otTATto/setup-tex.git"
+  },
+  "author": "otTATto",
+  "type": "module",
+  "bin": {
+    "setup-tex": "bin/stex.js",
+    "stex": "bin/stex.js"
+  },
+  "files": [
+    "bin",
+    "scripts",
+    "check/sample.tex",
+    "check/sample.bib",
+    "check/latexmkrc",
+    "check/expected.pdf",
+    "texlive.profile",
+    "DEPENDS.txt"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

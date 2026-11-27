@@ -30,13 +30,9 @@ jobs:
           which latexmk
       - name: Check Depends Input
         run: kpsewhich booktabs.sty
+      # stex コマンドから OS に合ったスクリプトを呼べることも確かめる
       - name: Check Build
-        if: runner.os != 'Windows'
-        run: scripts/check.sh
-      - name: Check Build (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: scripts/check.ps1
+        run: node bin/stex.js check
 
   # 同じ入力で 2 回目を実行し、キャッシュが当たることを確かめる
   cached:
@@ -59,10 +55,6 @@ jobs:
           exit 1
       - name: Check Depends Input
         run: kpsewhich booktabs.sty
+      # stex コマンドから OS に合ったスクリプトを呼べることも確かめる
       - name: Check Build
-        if: runner.os != 'Windows'
-        run: scripts/check.sh
-      - name: Check Build (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: scripts/check.ps1
+        run: node bin/stex.js check
